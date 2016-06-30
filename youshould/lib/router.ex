@@ -27,7 +27,6 @@ defmodule Youshould.Router do
 
     def get_weather(lat, lon) do
         HTTPotion.get("api.openweathermap.org/data/2.5/weather", 
-#            query: %{lat: lat, lon: lon, APPID: "c56b103ccede3f9978965916d7d6adf2"})
             query: %{lat: lat, lon: lon, APPID: Application.get_env(:youshould, :owm_api_key)})
     end
 

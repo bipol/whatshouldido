@@ -22,6 +22,13 @@ defmodule Youshould.Router do
         if !Map.has_key?(params, "longitude") do
             resp = {:error, "Response must have date, latitude, and longitude"}
         end
+        resp
+    end
+
+    def get_weather(lat, lon) do
+        HTTPotion.get("api.openweathermap.org/data/2.5/weather", 
+#            query: %{lat: lat, lon: lon, APPID: "c56b103ccede3f9978965916d7d6adf2"})
+            query: %{lat: lat, lon: lon, APPID: Application.get_env(:youshould, :owm_api_key)})
     end
 
     # query params:
@@ -32,8 +39,9 @@ defmodule Youshould.Router do
         conn = fetch_query_params(conn)
         case check_params(conn.params) do 
             {:ok, _} ->
+                resp = get_weather(conn.params["latitude"], conn.params["longitude"]).body
                 conn 
-                |> send_resp(200, "Yippeeeeeee")
+                |> send_resp(200, resp)
             {:error, body} ->
                 conn 
                 |> send_resp(400, body) 

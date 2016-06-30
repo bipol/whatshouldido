@@ -14,7 +14,7 @@ defmodule Youshould.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :cowboy, :plug],
+    [applications: [:logger, :cowboy, :plug, :httpotion],
      mod: {Youshould, []}]
   end
 
@@ -30,7 +30,8 @@ defmodule Youshould.Mixfile do
   defp deps do
     [
         {:cowboy, "~> 1.0"},
-        {:plug, "~> 1.0"}
+        {:plug, "~> 1.0"},
+        {:httpotion, "~> 3.0.0"}
     ]
   end
 end

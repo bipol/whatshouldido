@@ -12,7 +12,7 @@ class YouShould extends React.Component {
 
     render() {
         return ( <div>{this.props.date.toString()} 
-         {this.props.location ? this.props.location.coords.latitude : ''}</div> );
+         {this.props.location ? String(this.props.location.coords.latitude) + ' ' + String(this.props.location.coords.longitude) : ''}</div> );
     }
 }
 

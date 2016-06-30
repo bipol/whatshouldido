@@ -10,19 +10,10 @@ defmodule Youshould.Router do
 
     # check the parameters to ensure they are okay
     def check_params(params) do
-        resp = {:ok, params}
-        if !Map.has_key?(params, "date") do
-            resp = {:error, "Response must have date, latitude, and longitude"}
+        case params do
+            %{"date" => _, "latitude" => _, "longitude" => _} -> {:ok, params}
+            _ -> {:error, "Response must have date, latitude, and longitude, received: #{params}"}
         end
-
-        if !Map.has_key?(params, "latitude") do
-            resp = {:error, "Response must have date, latitude, and longitude"}
-        end
-
-        if !Map.has_key?(params, "longitude") do
-            resp = {:error, "Response must have date, latitude, and longitude"}
-        end
-        resp
     end
 
     def get_weather(lat, lon) do

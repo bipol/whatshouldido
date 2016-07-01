@@ -5,14 +5,37 @@ var ReactDOM = require('react-dom');
 class YouShould extends React.Component {
     constructor() {
         super();
+        this.state = { youshould: null };
     }
 
     componentDidMount() {
+        let req = new XMLHttpRequest();
+        req.onreadystatechange =
+            (function (req) {
+                return () => {
+                    if (req.readyState === XMLHttpRequest.DONE) {
+                        if (req.status === 200) {
+                            this.setState({
+                                youshould: req.responseText
+                            })
+                        }
+                    }
+                }
+            }.bind(this))(req);
+        let url = 'http://localhost:4000/api/getEvents'
+        let params = '?date=' + encodeURIComponent(this.props.date.toString())
+                    + '&latitude=' + encodeURIComponent(this.props.latitude)
+                    + '&longitude=' + encodeURIComponent(this.props.longitude);
+        req.open('GET',  url + params);
+        req.send();
     }
 
     render() {
-        return ( <div>{this.props.date.toString()} 
-         {this.props.location ? String(this.props.location.coords.latitude) + ' ' + String(this.props.location.coords.longitude) : ''}</div> );
+        if (this.state.youshould) {
+            return ( <div>{this.state.youshould}</div> )
+        } else {
+            return null
+        }
     }
 }
 
@@ -29,7 +52,6 @@ class InfoBox extends React.Component {
         if ("geolocation" in navigator) {
             self = this;
             navigator.geolocation.getCurrentPosition(function(pos) {
-                console.log(pos);
                 self.setState({ pos: pos });
             });
         } else {
@@ -38,7 +60,12 @@ class InfoBox extends React.Component {
     }
 
     render() {
-        return <YouShould location={this.state.pos} date={new Date()}/>
+        if (this.state.pos) {
+            return <YouShould latitude={this.state.pos.coords.latitude} 
+                longitude={this.state.pos.coords.longitude} date={new Date()}/>
+        } else {
+            return <div> Trying to find you... </div>
+        }
     }
 }
 

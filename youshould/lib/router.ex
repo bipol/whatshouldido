@@ -19,6 +19,7 @@ defmodule Youshould.Router do
             {:ok, _} ->
                 resp = get_weather(conn.params["latitude"], conn.params["longitude"]).body
                 conn 
+                |> put_resp_header("Access-Control-Allow-Origin", "*")
                 |> send_resp(200, resp)
             {:error, body} ->
                 conn 

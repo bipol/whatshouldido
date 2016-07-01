@@ -13,12 +13,11 @@ class YouShould extends React.Component {
         req.onreadystatechange =
             (function (req) {
                 return () => {
-                    if (req.readyState === XMLHttpRequest.DONE) {
-                        if (req.status === 200) {
-                            this.setState({
-                                youshould: req.responseText
-                            })
-                        }
+                    if (req.readyState === XMLHttpRequest.DONE 
+                            && req.status === 200) {
+                        this.setState({
+                            youshould: req.responseText
+                        })
                     }
                 }
             }.bind(this))(req);

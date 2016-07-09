@@ -6,6 +6,35 @@ class YouShould extends React.Component {
     constructor() {
         super();
         this.state = { youshould: null };
+        this.translateWeather = this.translateWeather.bind(this);
+        this.translateTemperature = this.translateTemperature.bind(this);
+    }
+
+    translateWeather(type) {
+      switch (type)  {
+          case "Thunderstorm":
+              return "Seems like there is a thunderstorm brewing."
+          case "Rain":
+              return "Raining, huh? Bring an umbrella."
+          case "Drizzle":
+              return "Some light rain today. Not too bad."
+          default:
+              return "Not sure what the weather is like, to be honest."
+      }
+    }
+
+    // heck do I even need this stuff client side?
+    translateTemperature(temp) {
+        if (temp <= 30) {
+            return temp + " degrees.  Pretty cold out.";
+        } else if (temp < 65 && temp > 30) {
+            return temp + " degrees. A little chilly.";
+        } else if (temp <= 80 && temp >= 65) {
+            return temp + " degrees.  Not too shabby.";
+        } else if (temp >= 80) {
+            return temp + " degrees.  Pretty hot outside.";
+        }
+        return "Not really sure what the temperature is.";
     }
 
     componentDidMount() {
@@ -13,10 +42,10 @@ class YouShould extends React.Component {
         req.onreadystatechange =
             (function (req) {
                 return () => {
-                    if (req.readyState === XMLHttpRequest.DONE 
+                    if (req.readyState === XMLHttpRequest.DONE
                             && req.status === 200) {
                         this.setState({
-                            youshould: req.responseText
+                            youshould: JSON.parse(req.responseText)
                         })
                     }
                 }
@@ -31,9 +60,19 @@ class YouShould extends React.Component {
 
     render() {
         if (this.state.youshould) {
-            return ( <div>{this.state.youshould}</div> )
+            return (
+              <div>
+                <div>{this.translateWeather(this.state.youshould.weather.type)}</div>
+                <div>{this.translateTemperature(this.state.youshould.weather.temperature)}</div>
+                <div>You should go to the {this.state.youshould.event.title} at {this.state.youshould.event.start_time}.</div>
+                <div>Here's what they have to say about themselves:</div>
+                <div>{this.state.youshould.event.description}</div>
+                <div>The address is: {this.state.youshould.event.address}</div>
+                <div>Have fun!</div>
+              </div>
+            )
         } else {
-            return null
+            return <div> Let me see what there is to do today... </div>
         }
     }
 }
@@ -60,7 +99,7 @@ class InfoBox extends React.Component {
 
     render() {
         if (this.state.pos) {
-            return <YouShould latitude={this.state.pos.coords.latitude} 
+            return <YouShould latitude={this.state.pos.coords.latitude}
                 longitude={this.state.pos.coords.longitude} date={new Date()}/>
         } else {
             return <div> Trying to find you... </div>
@@ -69,8 +108,6 @@ class InfoBox extends React.Component {
 }
 
 ReactDOM.render(
-  <InfoBox />, 
+  <InfoBox />,
   document.getElementById('react-root')
 );
-
-

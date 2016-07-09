@@ -31,7 +31,8 @@ defmodule Youshould.Mixfile do
     [
         {:cowboy, "~> 1.0"},
         {:plug, "~> 1.0"},
-        {:httpotion, "~> 3.0.0"}
+        {:httpotion, "~> 3.0.0"},
+        {:poison, "~> 2.0"}
     ]
   end
 end
